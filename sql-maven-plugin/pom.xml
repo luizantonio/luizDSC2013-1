@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.br</groupId>
+  <artifactId>sql-maven-plugin</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>sql-maven-plugin</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+	<!-- specify the dependent jdbc driver here -->
+	<!-- not used, I'm use database mysql -->
+    <dependency>
+       <groupId>postgresql</groupId>
+       <artifactId>postgresql</artifactId>
+       <version>8.1-407.jdbc3</version>
+    </dependency>
+     <!-- mysql -->
+    <dependency>
+       <groupId>mysql</groupId>
+       <artifactId>mysql-connector-java</artifactId>
+       <version>5.1.13</version>
+       <optional>true</optional>
+    </dependency>
+    <dependency>
+		<groupId>net.sf.squirrel-sql.plugins</groupId>
+		<artifactId>mysql</artifactId>
+		<version>3.5.0</version>
+	</dependency>
+
+    <dependency>
+    	<groupId>org.apache.jena</groupId>
+    	<artifactId>jena-jdbc-driver-tdb</artifactId>
+    	<version>1.0.1</version>
+    </dependency>
+  </dependencies>
+  <build>
+  <finalName>test</finalName>
+  	<plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.1</version>
+                <configuration>
+                    <mainClass>App</mainClass>
+                </configuration>
+            </plugin>
+			<!-- Plugin: sql-maven-plugin here -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                <!-- specify the dependent jdbc driver here -->
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>5.1.13</version>
+       				<optional>true</optional>  
+                </dependency>
+            </dependencies>
+            <!-- Database: URL, username and password  here -->
+            <configuration>
+		          <driver>com.mysql.jdbc.Driver</driver>
+		          <url>jdbc:mysql://localhost:3306</url>
+		          <username>root</username>
+		          <password></password>
+		    </configuration>
+			<!-- Executed in build project here -->
+             <executions>
+                    <execution>
+                        <id> execution-mysql </id> 
+            			<phase> prepare-package </phase> 
+            			<goals> 
+                			<goal> execute </goal> 
+            			</goals> 
+                        <configuration>
+                            <url>jdbc:mysql://localhost:3306</url>                            
+                            <autocommit>true</autocommit>
+                            <!-- Command SQL for create database here -->
+                            <sqlCommand>CREATE database IF NOT EXISTS `show`;</sqlCommand>                                                     
+                        </configuration>
+                    </execution>             
+              </executions>
+           </plugin>
+       </plugins>	
+  </build>
+</project>
+ 
